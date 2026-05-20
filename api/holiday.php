@@ -35,9 +35,12 @@ if ($serviceKey === false || trim($serviceKey) === '') {
 }
 
 $clientParams = $_GET;
-unset($clientParams['serviceKey']);
+unset($clientParams['serviceKey'], $clientParams['_type']);
 
-$params = array_merge($clientParams, ['serviceKey' => $serviceKey]);
+$params = array_merge($clientParams, [
+    'serviceKey' => $serviceKey,
+    '_type'      => 'json',
+]);
 
 $requestUrl = $url . '?' . http_build_query($params);
 
@@ -58,12 +61,4 @@ if ($response === false) {
     exit;
 }
 
-libxml_use_internal_errors(true);
-$xml = simplexml_load_string($response);
-if ($xml === false) {
-    http_response_code(502);
-    echo json_encode(['error' => 'xml_parse_failed', 'message' => $response], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-echo json_encode($xml, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+echo $response;
