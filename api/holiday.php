@@ -2,14 +2,26 @@
 
 header('Content-Type: application/json; charset=utf-8');
 
-$url = 'https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo';
+
+$url = 'https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo';
+$serviceKey = getenv('HOLIDAY_SERVICE_KEY');
+
+if ($serviceKey === false || trim($serviceKey) === '') {
+    http_response_code(500);
+
+    echo json_encode([
+        'error'   => 'service_key_missing',
+        'message' => 'HOLIDAY_SERVICE_KEY 환경변수가 설정되지 않았습니다.',
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 $clientParams = $_GET;
 unset($clientParams['serviceKey']);
 
 $params = array_merge(
     $clientParams,
-    ['serviceKey' => getenv('HOLIDAY_SERVICE_KEY') ?: '당신의_인증키']
+    ['serviceKey' => $serviceKey]
 );
 
 $requestUrl = $url . '?' . http_build_query($params);
@@ -35,7 +47,7 @@ libxml_use_internal_errors(true);
 $xml = simplexml_load_string($response);
 if ($xml === false) {
     http_response_code(502);
-    echo json_encode(['error' => 'xml_parse_failed', 'raw' => $response], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['error' => 'xml_parse_failed', 'message' => $response], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
