@@ -1,2 +1,4 @@
 /vercelServerLessTest.iml
 /.idea/
+.vercel
+.env*.local
