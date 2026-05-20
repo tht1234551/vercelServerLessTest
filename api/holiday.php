@@ -1,6 +1,6 @@
 <?php
 
-// header('Content-Type: application/json; charset=utf-8');
+header('Content-Type: application/json; charset=utf-8');
 
 $url = 'https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo';
 $params = [
@@ -20,7 +20,7 @@ curl_setopt_array($ch, [
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $curlErr  = curl_error($ch);
-curl_close($ch);
+unset($ch);
 
 if ($response === false) {
     http_response_code(502);
