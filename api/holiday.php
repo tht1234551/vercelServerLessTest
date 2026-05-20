@@ -16,12 +16,15 @@ if ($serviceKey === false || trim($serviceKey) === '') {
     exit;
 }
 
-$clientParams = $_GET;
-unset($clientParams['serviceKey']);
-
 $params = array_merge(
-    $clientParams,
-    ['serviceKey' => $serviceKey]
+    $_GET,
+    [
+        'serviceKey' => $serviceKey,
+        'solYear' => $_GET['solYear'],
+        'solMonth' => $_GET['solMonth'],
+        'numOfRows' => $_GET['numOfRows'],
+        'pageNo' => $_GET['pageNo']
+    ]
 );
 
 $requestUrl = $url . '?' . http_build_query($params);
