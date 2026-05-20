@@ -3,11 +3,14 @@
 header('Content-Type: application/json; charset=utf-8');
 
 $url = 'https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo';
-$params = [
-    'serviceKey' => getenv('HOLIDAY_SERVICE_KEY') ?: '당신의_인증키',
-    'solYear'    => $_GET['solYear'] ?? '2025',
-    'numOfRows'  => '100',
-];
+
+$clientParams = $_GET;
+unset($clientParams['serviceKey']);
+
+$params = array_merge(
+    $clientParams,
+    ['serviceKey' => getenv('HOLIDAY_SERVICE_KEY') ?: '당신의_인증키']
+);
 
 $requestUrl = $url . '?' . http_build_query($params);
 
@@ -36,16 +39,4 @@ if ($xml === false) {
     exit;
 }
 
-$holidays = [];
-foreach ($xml->xpath('//item') as $item) {
-    $holidays[] = [
-        'name' => (string) $item->dateName,
-        'date' => (string) $item->locdate,
-    ];
-}
-
-echo json_encode([
-    'year'     => $params['solYear'],
-    'count'    => count($holidays),
-    'holidays' => $holidays,
-], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+echo json_encode($xml, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
