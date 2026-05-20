@@ -1,7 +1,5 @@
 <?php
-
 header('Content-Type: application/json; charset=utf-8');
-
 
 $url = 'https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo';
 $serviceKey = getenv('HOLIDAY_SERVICE_KEY');
@@ -16,16 +14,11 @@ if ($serviceKey === false || trim($serviceKey) === '') {
     exit;
 }
 
-$params = array_merge(
-    $_GET,
-    [
-        'serviceKey' => $serviceKey,
-        'solYear' => $_GET['solYear'],
-        'solMonth' => $_GET['solMonth'],
-        'numOfRows' => $_GET['numOfRows'],
-        'pageNo' => $_GET['pageNo']
-    ]
-);
+// 공공데이터포털 getRestDeInfo 지원 파라미터 참고용: solYear, solMonth, numOfRows, pageNo, ...
+$clientParams = $_GET;
+unset($clientParams['serviceKey']);
+
+$params = array_merge($clientParams, ['serviceKey' => $serviceKey]);
 
 $requestUrl = $url . '?' . http_build_query($params);
 
