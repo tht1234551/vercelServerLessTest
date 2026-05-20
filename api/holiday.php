@@ -1,6 +1,6 @@
 <?php
 
-header('Content-Type: application/json; charset=utf-8');
+// header('Content-Type: application/json; charset=utf-8');
 
 $url = 'https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo';
 $params = [
